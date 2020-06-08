@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>About</title>
+{% endblock title %}
+
+{% block content %}
+<h3>About this site</h3>
+<p>This is a site for travelers, by travelers! </p>
+<p>Going somewhere? Visit our <a href="{% url 'forum:post_list' %}">forum</a>, where you can ask
+questions about future places, and help fellow travelers with their current
+journeys!</p>
+<p>Need some gear? Head on over to our <a href="#">shop</a>, where you'll find all you need to
+get ready for your grand adventure!</p>
+<p>Love browsing through photos? Visit our <a href="#">Places</a> page, where
+you'll find beautiful, user-submitted photos of Earth's most beautiful places!</p>
+<p>Want to submit your own photos? Send them to photos@travelsite.com, and we'll
+post them for all to see!</p>
+<p>Need an account? You can <a href="{% url 'accounts:signup' %}">sign up here!</a></p>
+{% endblock content %}

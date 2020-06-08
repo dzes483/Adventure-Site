@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+  {% block title %}
+    <title>{{ forumpost.title }}</title>
+  {% endblock title %}
+  {% block content %}
+  {% load static %}
+    <div class="card" style="width: 50rem;">
+      <div class="card-header">
+        {% if forumpost.user.profile.profile_picture %}
+          <img class="rounded-circle" id="forumpost_avatar" src="{{ forumpost.user.profile.profile_picture.url }}" alt="">
+        {% else %}
+          <img class="rounded-circle" id="forumpost_avatar" src="{% static 'images/default.jpg' %}" alt="">
+        {% endif %}
+        {{ forumpost.title }}
+          <p id="forumpost_subheader"> Posted by
+            {% if user == forumpost.user %}
+              <a href="{% url 'accounts:view_profile_with_pk' pk=user.pk %}">{{ forumpost.user }}</a>
+            {% else %}
+              <a href="{% url 'accounts:view_profile_with_pk' pk=forumpost.user.pk %}">{{ forumpost.user }}</a>
+            {% endif %}
+            {{ forumpost.created_at }}
+              <p id="forumpost_subheader">Replies: {{ num_comments }}</p>
+          </p>
+      </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      {{ forumpost.post_text }}
+        {% if user.is_authenticated and forumpost.user == user and not hide_delete  %}
+          <a id="forumpost-delete-button" href="{% url 'forum:post_delete' pk=forumpost.pk %}" title="delete" class="btn btn-outline-danger">
+            Delete
+          </a>
+        {% elif user.is_staff %}
+          <a id="forumpost-delete-button" href="{% url 'forum:post_delete' pk=forumpost.pk %}" title="delete" class="btn btn-outline-danger">
+            Delete
+          </a>
+        {% endif %}
+    </li>
+    {% for comment in comments %}
+      <li class="list-group-item">
+        {% if comment.user.profile.profile_picture %}
+          <img class="rounded-circle" id="forumpost_avatar-comment" src="{{ comment.user.profile.profile_picture.url }}" alt="">
+        {% else %}
+          <img class="rounded-circle" id="forumpost_avatar-comment" src="{% static 'images/default.jpg' %}" alt="">
+        {% endif %}
+        {% if user == comment.user %}
+          <a href="{% url 'accounts:view_profile_with_pk' pk=user.pk %}">{{ comment.user }}</a>
+        {% else %}
+          <a href="{% url 'accounts:view_profile_with_pk' pk=comment.user.pk %}">{{ comment.user }}</a>
+        {% endif %}
+          <p id="forumpost_subheader">{{ comment.replied_at }}</p>
+            <hr>
+              {{ comment.comment_text }}
+                <p></p>
+      {% if user.is_authenticated and comment.user == user and not hide_delete %}
+          <a id="comment-delete-button" href="{% url 'forum:comment_delete' pk=comment.pk %}" title="delete" class="btn btn-outline-danger btn-sm">
+            Delete
+          </a>
+      {% elif user.is_staff %}
+          <a id="comment-delete-button" href="{% url 'forum:comment_delete' pk=comment.pk %}" title="delete" class="btn btn-outline-danger btn-sm">
+            Delete
+          </a>
+      {% endif %}
+      {% empty %}
+        <p>There are no comments yet.</p>
+    {% endfor %}
+    </li>
+  </ul>
+</div>
+
+{% if user.is_authenticated %}
+<button id='comment-button' type="submit" class="btn btn-primary">Comment</button>
+<form id='comment-form' method="POST" style="margin-top: 1.3em;">
+  {{ comment_form.as_p }}
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Forum</title>
+{% endblock title %}
+{% block content %}
+<h1>Forum</h1>
+{% load static %}
+<div class="jumbotron">
+{% if forumpost_list %}
+<ul>
+  <a href="{% url 'forum:post_create' %}">Create new post</a>
+  {% for forumpost in forumpost_list %}
+  <div class="card" style="width: 45rem;">
+    <div class="card-header">
+      <!-- user profile picture -->
+      {% if forumpost.user.profile.profile_picture %}
+          <img class="rounded-circle" id="forumpost_avatar" src="{{ forumpost.user.profile.profile_picture.url }}" alt="">
+        {% else %}
+        <img class="rounded-circle" id="forumpost_avatar" src="{% static 'images/default.jpg' %}" alt="">
+      {% endif %}
+      <a href="{{ forumpost.get_absolute_url }}">{{ forumpost.title }}</a>
+      <p class="forum_subheader">Posted by {{ forumpost.user }} on {{  forumpost.created_at  }}</p>
+    </div>
+  </div>
+  {% endfor %}
+
+</ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% else %}
+  <p>There are currently no posts. You can create a new topic by clicking on the link below!</p>
+  <a href="{% url 'forum:post_create' %}">Create new post</a>
+{% endif %}
+</div>
+{% endblock content %}

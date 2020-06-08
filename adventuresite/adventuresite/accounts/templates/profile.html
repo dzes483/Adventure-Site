@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title>Profile</title>
+{% endblock title %}
+{% block content %}
+{% load static %}
+  <div class="content-section">
+    <div class="media">
+      {% if user.profile.profile_picture %}
+          <img class="rounded-circle profile_img" src="{{ user.profile.profile_picture.url }}" alt="Profile Picture">
+        {% else %}
+          <img class="rounded-circle profile_img" src="{% static 'default.jpg' %}" alt="">
+      {% endif %}
+      <div class="media-body">
+        <h2 class="account-heading">{{ user.username }}</h2>
+        <p>{{ user.first_name }}</p>
+        <p class="text-secondary">Location: {{ user.profile.location }}</p>
+      </div>
+    </div>
+  </div>
+  {% if request.user == user.profile.user %}
+      <p><a href="{% url 'accounts:update_profile' %}"</a>Edit Profile</p>
+  {% endif %}
+
+
+{% endblock content %}

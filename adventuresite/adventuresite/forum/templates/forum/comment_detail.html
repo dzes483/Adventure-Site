@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {{comment.comment_text}}
+  {% if user.is_authenticated and comment.user == user and not hide_delete %}
+  <a id="comment-delete-button" href="{% url 'forum:comment_delete' pk=comment.pk %}" title="delete" class="btn btn-danger">
+    Delete
+  </a>
+  {% elif user.is_staff %}
+  <a id="forumpost-delete-button" href="{% url 'forum:comment_delete' pk=comment.pk %}" title="delete" class="btn btn-danger">
+    Delete
+  </a>
+  {% endif %}
+{% endblock %}
