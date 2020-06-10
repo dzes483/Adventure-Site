@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from accounts.models import Profile
 from django.conf import settings
 from django.urls import reverse
-import uuid
 
 class ForumPost(models.Model):
     """Represents a post on the forum"""
