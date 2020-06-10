@@ -7,7 +7,7 @@ from django.urls import reverse
 import uuid
 
 class ForumPost(models.Model):
-    """docstring for Post."""
+    """Represents a post on the forum"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     title = models.CharField(max_length = 100)
     post_text = models.TextField()
@@ -23,7 +23,7 @@ class ForumPost(models.Model):
         return reverse('forum:post_detail', args=[str(self.id)])
 
 class Comment(models.Model):
-    """docstring for Comment."""
+    """Represents a comment in response to a forum post"""
     forumpost = models.ForeignKey(ForumPost, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     reply = models.ForeignKey('self', null=True, related_name="replies", on_delete=models.CASCADE)
